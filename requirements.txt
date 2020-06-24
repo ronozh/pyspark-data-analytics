@@ -1,5 +1,7 @@
 pyspark==2.4.6
 numpy
 pandas
+lxml
+stringcase
 pytest
 setuptools
