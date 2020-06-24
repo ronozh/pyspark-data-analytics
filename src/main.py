@@ -32,6 +32,7 @@ def main(argv):
     try:
         spark = create_spark_session(name)
         sc = spark.sparkContext
+        sc.setLogLevel('WARN')
         klass(spark).run()
     except Exception as e:
         raise (e)

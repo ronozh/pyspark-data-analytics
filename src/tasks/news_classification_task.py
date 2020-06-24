@@ -16,21 +16,21 @@ from .spark_task import SparkTask
 class NewsClassificationTask(SparkTask, metaclass=ABCMeta):
     
     def run(self):
-        print('Running news classification task')
+        self.logger.info('Running news classification task')
         
-        print('loading news raw data...')
+        self.logger.info('loading news raw data...')
         train_dataset, test_dataset = self.load_data()
         
-        print('creating binary classification evaluator...')
+        self.logger.info('creating binary classification evaluator...')
         self.evaluator = BinaryClassificationEvaluator(rawPredictionCol='prediction')
         
-        print('preparing machine learning pipeline...')
+        self.logger.info('preparing machine learning pipeline...')
         self.pipeline = self.prepare_pipeline()
         
-        print('training...')
+        self.logger.info('training...')
         self.train(train_dataset)
         
-        print('evaluating AUCROC at test dataset...')
+        self.logger.info('evaluating AUCROC at test dataset...')
         self.evaluation(test_dataset)
         
     def load_data(self):
@@ -64,7 +64,7 @@ class NewsClassificationTask(SparkTask, metaclass=ABCMeta):
     def evaluation(self, test_dataset):
         predictions = self.model.transform(test_dataset)
         auc = self.evaluator.evaluate(predictions)
-        print(f'AUCROC on test dataset is {auc}')
+        self.logger.info(f'AUCROC on test dataset is {auc}')
         
     
     def save(self):
