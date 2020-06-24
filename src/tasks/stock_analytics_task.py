@@ -1,10 +1,10 @@
 from abc import ABCMeta
 import pandas as pd
 
-from .base_task import BaseTask
+from .spark_task import SparkTask
 
 
-class StockAnalyticsTask(BaseTask, metaclass=ABCMeta):
+class StockAnalyticsTask(SparkTask, metaclass=ABCMeta):
     
     def run(self):
         print('Running stock analytics task')

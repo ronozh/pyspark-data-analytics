@@ -3,8 +3,10 @@ import sys
 import time
 import importlib
 import stringcase
+import pdb
 
 from helper.spark import create_spark_session
+from tasks.spark_task import SparkTask
 
 
 def parse_args(argv):
@@ -17,33 +19,28 @@ def main(argv):
     args = parse_args(argv)
     
     # Load the task module / class via meta programming approach
-    # GoodpathTask -> goodpath_task
+    # e.g., GoodpathTask -> goodpath_task
     name = stringcase.snakecase(args.task)
     try:
         task_module = importlib.import_module(f'tasks.{name}')
     except ImportError:
         raise ValueError(f'Invalid Task: {args.task} task not found')
     
-    spark = create_spark_session(name)
-    sc = spark.sparkContext
+    start = time.time()
     
+    klass = getattr(task_module, args.task)
     try:
-        start = time.time()
-
-        # Instantiate the task module class with spark session and args and run it
-        klass = getattr(task_module, args.task)
+        spark = create_spark_session(name)
+        sc = spark.sparkContext
         klass(spark).run()
-
-        end = time.time()
-
-        print(f'Task {name} took {end-start} seconds')
-
     except Exception as e:
         raise (e)
     finally:
-        # Clean up the spark context
-        sc.stop()
-    
+        sc.stop()                
+
+    end = time.time()
+    print(f'Task {name} took {end-start} seconds')
+
     return 0
 
 

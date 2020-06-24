@@ -1,9 +1,9 @@
 from abc import ABCMeta
 
-from .base_task import BaseTask
+from .spark_task import SparkTask
 
 
-class GoodpathTask(BaseTask, metaclass=ABCMeta):
+class GoodpathTask(SparkTask, metaclass=ABCMeta):
 
     def run(self):
         print('Running goodpath task')
